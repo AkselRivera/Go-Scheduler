@@ -1,6 +1,6 @@
 package task_heap
 
-import "go-scheduler/pkg/domain"
+import "github.com/AkselRivera/go-scheduler/pkg/domain"
 
 func (th *TaskHeap) Push(x interface{}) {
 	n := len(*th)

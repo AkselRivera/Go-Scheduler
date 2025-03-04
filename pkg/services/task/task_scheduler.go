@@ -3,7 +3,7 @@ package task
 import (
 	"container/heap"
 	"errors"
-	"go-scheduler/pkg/domain"
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
 	"time"
 )
 

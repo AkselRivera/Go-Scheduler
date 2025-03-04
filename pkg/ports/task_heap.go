@@ -1,6 +1,6 @@
 package ports
 
-import "go-scheduler/pkg/domain"
+import "github.com/AkselRivera/go-scheduler/pkg/domain"
 
 type TaskHeapInterface interface {
 	Len() int

@@ -1,8 +1,8 @@
 package task
 
 import (
-	"go-scheduler/pkg/domain"
-	"go-scheduler/pkg/ports"
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
+	"github.com/AkselRivera/go-scheduler/pkg/ports"
 	"sync"
 )
 

@@ -1,7 +1,7 @@
 package ports
 
 import (
-	"go-scheduler/pkg/domain"
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
 )
 
 type TaskService struct {

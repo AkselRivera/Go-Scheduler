@@ -1,8 +1,8 @@
 package infrastructure
 
 import (
-	"go-scheduler/pkg/services/task"
-	"go-scheduler/pkg/services/task_heap"
+	"github.com/AkselRivera/go-scheduler/pkg/services/task"
+	"github.com/AkselRivera/go-scheduler/pkg/services/task_heap"
 )
 
 func StartScheduler() *task.TaskService {

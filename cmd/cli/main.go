@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-scheduler/pkg/domain"
-	"go-scheduler/pkg/infrastructure"
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
+	"github.com/AkselRivera/go-scheduler/pkg/infrastructure"
 	"sync"
 	"time"
 )
