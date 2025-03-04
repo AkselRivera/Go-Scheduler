@@ -25,7 +25,6 @@ func AddTask(t *models.Task) (string, error) {
 		return "", errors.New("task with the same ID already exists")
 	}
 
-	taskID = t.ID
 	t.ID = taskID
 	taskMap[t.ID] = t
 
