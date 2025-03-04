@@ -1,16 +1,5 @@
-package models
+package domain
 
-import "time"
-
-// Estructura de la tarea con un ID único
-type Task struct {
-	ID            string    `json:"job_id"`
-	ExecutionTime time.Time `json:"execution_time"`
-	Action        func()    `json:"-"`
-	Index         int       `json:"-"`
-}
-
-// Estructura del heap de tareas
 type TaskHeap []*Task
 
 func (th TaskHeap) Len() int           { return len(th) }
@@ -38,7 +27,6 @@ func (th *TaskHeap) Pop() interface{} {
 	return task
 }
 
-// Implementar Peek para revisar el primer elemento sin eliminarlo
 func (th *TaskHeap) Peek() *Task {
 	if th.Len() == 0 {
 		return nil
