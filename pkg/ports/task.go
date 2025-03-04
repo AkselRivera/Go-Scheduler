@@ -14,6 +14,6 @@ type TaskService struct {
 type TaskServiceInterface interface {
 	AddTask(t *domain.Task) (string, error)
 	CancelTask(id string)
-	GetAllTasks() []*domain.Task
+	GetAllTasks(page, pageSize int) ([]*domain.Task, int)
 	TaskRunner()
 }

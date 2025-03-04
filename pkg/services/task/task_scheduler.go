@@ -3,7 +3,6 @@ package task
 import (
 	"container/heap"
 	"errors"
-	"fmt"
 	"go-scheduler/pkg/domain"
 	"time"
 )
@@ -25,17 +24,37 @@ func (ts *TaskService) CancelTask(id string) {
 	ts.CancelChannel <- id
 }
 
-func (ts *TaskService) GetAllTasks() []*domain.Task {
+func (ts *TaskService) GetAllTasks(page, pageSize int) ([]*domain.Task, int) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	tasks := make([]*domain.Task, len(ts.TaskMap))
+	if page < 1 {
+		page = 1
+	}
+
+	if pageSize < 1 || pageSize > 100 {
+		pageSize = 25
+	}
+
+	totalTasks := len(ts.TaskMap)
+	start := (page - 1) * pageSize
+	end := start + pageSize
+	if start > len(ts.TaskMap) {
+		return nil, 0
+	}
+	if end > len(ts.TaskMap) {
+		end = len(ts.TaskMap)
+	}
+
+	tasks := make([]*domain.Task, 0, end-start)
 	i := 0
 	for _, task := range ts.TaskMap {
-		tasks[i] = task
+		if i >= start && i < end {
+			tasks = append(tasks, task)
+		}
 		i++
 	}
-	return tasks
+	return tasks, totalTasks
 }
 
 func (ts *TaskService) TaskRunner() {
@@ -58,7 +77,6 @@ func (ts *TaskService) TaskRunner() {
 
 		var sleepDuration time.Duration
 		if nextTask := ts.TaskHeap.Peek(); nextTask != nil {
-			fmt.Println("Next task:", nextTask.ID, "at", nextTask.ExecutionTime)
 			sleepDuration = nextTask.ExecutionTime.Sub(now)
 		} else {
 			sleepDuration = time.Hour
