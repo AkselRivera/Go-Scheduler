@@ -2,6 +2,7 @@ package ports
 
 import (
 	"github.com/AkselRivera/go-scheduler/pkg/domain"
+	"sync"
 )
 
 type TaskService struct {
@@ -9,6 +10,8 @@ type TaskService struct {
 	TaskMap       map[string]*domain.Task
 	TaskChannel   chan *domain.Task
 	CancelChannel chan string
+
+	Mu sync.Mutex
 }
 
 type TaskServiceInterface interface {

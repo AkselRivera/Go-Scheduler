@@ -8,8 +8,8 @@ import (
 )
 
 func (ts *TaskService) AddTask(t *domain.Task) (string, error) {
-	mu.Lock()
-	defer mu.Unlock()
+	ts.Mu.Lock()
+	defer ts.Mu.Unlock()
 
 	if _, exists := ts.TaskMap[t.ID]; exists {
 		return "", errors.New("task with the same ID already exists")
@@ -25,8 +25,8 @@ func (ts *TaskService) CancelTask(id string) {
 }
 
 func (ts *TaskService) GetAllTasks(page, pageSize int) ([]*domain.Task, int) {
-	mu.Lock()
-	defer mu.Unlock()
+	ts.Mu.Lock()
+	defer ts.Mu.Unlock()
 
 	if page < 1 {
 		page = 1
@@ -60,7 +60,7 @@ func (ts *TaskService) GetAllTasks(page, pageSize int) ([]*domain.Task, int) {
 func (ts *TaskService) TaskRunner() {
 	heap.Init(ts.TaskHeap)
 	for {
-		mu.Lock()
+		ts.Mu.Lock()
 		now := time.Now().UTC()
 
 		for ts.TaskHeap.Len() > 0 {
@@ -81,21 +81,21 @@ func (ts *TaskService) TaskRunner() {
 		} else {
 			sleepDuration = time.Hour
 		}
-		mu.Unlock()
+		ts.Mu.Unlock()
 
 		// Escuchar los canales
 		select {
 		case newTask := <-ts.TaskChannel:
-			mu.Lock()
+			ts.Mu.Lock()
 			heap.Push(ts.TaskHeap, newTask)
-			mu.Unlock()
+			ts.Mu.Unlock()
 		case taskID := <-ts.CancelChannel:
-			mu.Lock()
+			ts.Mu.Lock()
 			if task, exists := ts.TaskMap[taskID]; exists && task.Index >= 0 {
 				heap.Remove(ts.TaskHeap, task.Index)
 				delete(ts.TaskMap, taskID)
 			}
-			mu.Unlock()
+			ts.Mu.Unlock()
 		case <-time.After(sleepDuration):
 		}
 	}
