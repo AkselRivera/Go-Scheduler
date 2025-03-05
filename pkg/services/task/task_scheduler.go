@@ -3,13 +3,19 @@ package task
 import (
 	"container/heap"
 	"errors"
-	"github.com/AkselRivera/go-scheduler/pkg/domain"
+	"sync"
 	"time"
+
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
 )
 
 func (ts *TaskService) AddTask(t *domain.Task) (string, error) {
 	ts.Mu.Lock()
 	defer ts.Mu.Unlock()
+
+	if t.ExecutionTime.Before(time.Now().UTC()) {
+		return "", errors.New("task execution time cannot be in the past")
+	}
 
 	if _, exists := ts.TaskMap[t.ID]; exists {
 		return "", errors.New("task with the same ID already exists")
@@ -57,8 +63,9 @@ func (ts *TaskService) GetAllTasks(page, pageSize int) ([]*domain.Task, int) {
 	return tasks, totalTasks
 }
 
-func (ts *TaskService) TaskRunner() {
+func (ts *TaskService) TaskRunner(wg *sync.WaitGroup) {
 	heap.Init(ts.TaskHeap)
+	wg.Done()
 	for {
 		ts.Mu.Lock()
 		now := time.Now().UTC()

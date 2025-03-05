@@ -10,8 +10,15 @@ import (
 )
 
 func main() {
-	var mu sync.Mutex
-	taskScheduler := infrastructure.StartScheduler(&mu)
+	taskScheduler := infrastructure.StartScheduler()
+	taskScheduler.AddTask(&domain.Task{ID: "0", ExecutionTime: time.Now(), Action: func() { fmt.Println("Task 0 executed", time.Now()) }})
+	tt, er := taskScheduler.AddTask(&domain.Task{ID: "01", ExecutionTime: time.Now().Add(time.Second * -10), Action: func() { fmt.Println("Task 01 executed", time.Now()) }})
+
+	if er != nil {
+		fmt.Println("Error adding task", er)
+	} else {
+		fmt.Println("Task 01 added at", time.Now(), tt)
+	}
 
 	wg := sync.WaitGroup{}
 

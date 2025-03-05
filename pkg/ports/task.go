@@ -19,5 +19,5 @@ type TaskServiceInterface interface {
 	AddTask(t *domain.Task) (string, error)
 	CancelTask(id string)
 	GetAllTasks(page, pageSize int) ([]*domain.Task, int)
-	TaskRunner()
+	TaskRunner(wg *sync.WaitGroup)
 }
