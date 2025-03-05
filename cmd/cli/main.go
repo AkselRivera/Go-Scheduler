@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/AkselRivera/go-scheduler/pkg/domain"
-	"github.com/AkselRivera/go-scheduler/pkg/infrastructure"
 	"sync"
 	"time"
+
+	"github.com/AkselRivera/go-scheduler/pkg/domain"
+	"github.com/AkselRivera/go-scheduler/pkg/infrastructure"
 )
 
 func main() {
-	taskScheduler := infrastructure.StartScheduler()
+	var mu sync.Mutex
+	taskScheduler := infrastructure.StartScheduler(&mu)
 
 	wg := sync.WaitGroup{}
 
