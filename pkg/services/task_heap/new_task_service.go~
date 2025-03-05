@@ -1,0 +1,12 @@
+package task_heap
+
+import "go-scheduler/pkg/domain"
+
+func (th TaskHeap) NewTaskService(taskHeap TaskHeapInterface) *TaskService {
+	return &TaskService{
+		TaskHeap:      taskHeap,
+		TaskMap:       make(map[string]*domain.Task),
+		TaskChannel:   make(chan *domain.Task),
+		CancelChannel: make(chan string),
+	}
+}
