@@ -21,8 +21,8 @@ func (th *TaskHeap) Pop() interface{} {
 	old := *th
 	n := len(old)
 	task := old[n-1]
-	old[n-1] = nil  // Evitar memory leak
-	task.Index = -1 // Por seguridad
+	old[n-1] = nil
+	task.Index = -1
 	*th = old[0 : n-1]
 	return task
 }

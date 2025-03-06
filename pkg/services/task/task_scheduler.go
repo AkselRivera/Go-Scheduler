@@ -3,6 +3,7 @@ package task
 import (
 	"container/heap"
 	"errors"
+	"fmt"
 	"sync"
 	"time"
 
@@ -18,11 +19,10 @@ func (ts *TaskService) AddTask(t *domain.Task) (string, error) {
 	}
 
 	if _, exists := ts.TaskMap[t.ID]; exists {
-		return "", errors.New("task with the same ID already exists")
+		return "", fmt.Errorf("task #%s already exists", t.ID)
 	}
 
-	ts.TaskMap[t.ID] = t
-	ts.TaskChannel <- t // Enviar la tarea al canal para ser procesada
+	ts.TaskChannel <- t
 	return t.ID, nil
 }
 
@@ -90,7 +90,6 @@ func (ts *TaskService) TaskRunner(wg *sync.WaitGroup) {
 		}
 		ts.Mu.Unlock()
 
-		// Escuchar los canales
 		select {
 		case newTask := <-ts.TaskChannel:
 			ts.Mu.Lock()
